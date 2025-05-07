@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    environment:
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data:/data
+    networks:
+      - mynetwork
+
+  python:
+    image: python:3.9-slim
+    container_name: python
+    depends_on:
+      - minio
+    volumes:
+      - ./scripts:/scripts
+    networks:
+      - mynetwork
+    command: >
+      bash -c "pip install -r /scripts/requirements.txt && \
+      python /scripts/extract_load.py"
+
+networks:
+  mynetwork:
+
+volumes:
+  minio_data:
