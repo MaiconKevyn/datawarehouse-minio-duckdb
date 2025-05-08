@@ -1,0 +1,7 @@
+git+https://github.com/AlertaDengue/PySUS.git
+pandas
+pyarrow
+boto3
+botocore
+python-dotenv
+duckdb

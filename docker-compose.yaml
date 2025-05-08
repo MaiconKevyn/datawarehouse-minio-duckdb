@@ -9,7 +9,7 @@ services:
       MINIO_SECRET_KEY: minioadmin
     ports:
       - "9000:9000"
-      - "9001:9001"
+      - "9002:9001"
     command: server /data --console-address ":9001"
     volumes:
       - minio_data:/data
@@ -17,17 +17,33 @@ services:
       - mynetwork
 
   python:
-    image: python:3.9-slim
+    build: .
     container_name: python
     depends_on:
       - minio
     volumes:
-      - ./scripts:/scripts
+      - ./scripts:/app
+    working_dir: /app
+    env_file:
+      - .env
     networks:
       - mynetwork
-    command: >
-      bash -c "pip install -r /scripts/requirements.txt && \
-      python /scripts/extract_load.py"
+    command: bash -c "python extract_load.py && python list_bucket.py"
+
+
+#  python:
+#    image: python:3.11-slim
+#    container_name: python
+#    depends_on:
+#      - minio
+#    volumes:
+#      - ./scripts:/app
+#    working_dir: /app
+#    networks:
+#      - mynetwork
+#    command: python extract_load.py
+#      bash -c "pip install -r /scripts/requirements.txt && \
+#      python /scripts/extract_load.py"
 
 networks:
   mynetwork:
