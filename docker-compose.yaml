@@ -9,7 +9,7 @@ services:
       MINIO_SECRET_KEY: minioadmin
     ports:
       - "9000:9000"
-      - "9002:9001"
+      - "9001:9001"
     command: server /data --console-address ":9001"
     volumes:
       - minio_data:/data
@@ -23,12 +23,14 @@ services:
       - minio
     volumes:
       - ./scripts:/app
+      - ./.env:/app/.env         # carrega suas variáveis de ambiente
+
     working_dir: /app
     env_file:
       - .env
     networks:
       - mynetwork
-    command: bash -c "python extract_load.py && python list_bucket.py"
+    command: tail -f /dev/null
 
 
 #  python:

@@ -16,4 +16,4 @@ COPY scripts/ /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
 # 3) Entry point
-CMD ["python", "extract_load.py"]
+CMD ["python"]
